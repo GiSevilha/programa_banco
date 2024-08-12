@@ -1,5 +1,3 @@
-import os
-
 class Persona:
     def __init__(self, nombre, apellido):
         self.nombre = nombre
@@ -62,8 +60,6 @@ def inicio():
 
 inicio()
 
-mi_url = os.getcwd()
-print(mi_url)
 
 
 
