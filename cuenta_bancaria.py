@@ -1,7 +1,7 @@
 class Persona:
     def __init__(self, nombre, apellido):
-        self.nombre = nombre
-        self.apellido = apellido
+        self.nombre = nombre.capitalize()
+        self.apellido = apellido.capitalize()
 
 
 class Cliente(Persona):
@@ -17,45 +17,75 @@ class Cliente(Persona):
         Saldo: {self.balance} €"""
 
     def depositar(self, importe):
-        self.balance += importe
-        print("¡Depósito aceptado!")
-
+        if importe > 0:
+            self.balance += importe
+            print(f"\n¡Depósito de {importe:.2f} € aceptado!")
+        else:
+            print("El importe debe ser un valor positivo.")
 
     def retirar(self, importe_retirar):
-        if self.balance < importe_retirar:
-            print("¡Operación rechazada por saldo insuficiente!")
+        if importe_retirar > 0:
+            if self.balance >= importe_retirar:
+                self.balance -= importe_retirar
+                print(f"\n¡Retiro de {importe_retirar:.2f} € realizado!")
+            else:
+                print("\n¡Operación rechazada por saldo insuficiente!")
         else:
-            self.balance -= importe_retirar
-            print("¡Retiro realizado!")
+            print("\nEl importe debe ser un valor positivo.")
+
+    def mostrar_info(self):
+        print(self)
 
 
 def crear_cliente():
-    n = str(input("Nombre: ")).capitalize()
-    a = str(input("Apellido: ")).capitalize()
+    n = str(input("Nombre: ")).strip()
+    a = str(input("Apellido: ")).strip()
     c = str(input("Numero de cuenta: ")).strip()
+
+    while not c.isdigit():
+        print("Número de cuenta inválido. Debe contener solo números.")
+        c = input("Número de cuenta (solo números): ").strip()
+
     cliente = Cliente(n, a, c)
     return cliente
 
 
 def inicio():
     mi_cliente = crear_cliente()
-    opcion = " "
-    while opcion != "3":
-        print("""
-            ¡Hola! Elige una de las opciones: 
-            [1] Depositar
-            [2] Retirar
-            [3] Salir""")
-        opcion = input()
-        if opcion == "1":
-            valor_deposito = int(input("Cuanto quieres depositar? "))
-            mi_cliente.depositar(valor_deposito)
-        elif opcion == '2':
-            monto_ret = int(input("Monto a retirar: "))
-            mi_cliente.retirar(monto_ret)
-    print(mi_cliente)
 
-    print("\nGracias por operar en Banco Python")
+    while True:
+        print("""
+        ¡Hola! Elige una de las opciones: 
+        [1] Depositar
+        [2] Retirar
+        [3] Mostrar información del cliente
+        [4] Salir""")
+
+        opcion = input("Opción: ").strip()
+
+        if opcion == "1":
+            try:
+                valor_deposito = float(input("¿Cuánto quieres depositar? "))
+                mi_cliente.depositar(valor_deposito)
+            except ValueError:
+                print("Por favor, ingresa un valor numérico válido.")
+
+        elif opcion == "2":
+            try:
+                monto_retiro = float(input("Monto a retirar: "))
+                mi_cliente.retirar(monto_retiro)
+            except ValueError:
+                print("Por favor, ingresa un valor numérico válido.")
+
+        elif opcion == "3":
+            mi_cliente.mostrar_info()
+
+        elif opcion == "4":
+            print("\nGracias por operar en Banco Python")
+            break
+
+        else:
+            print("Opción no válida. Por favor, elige una opción válida.")
 
 
 inicio()
